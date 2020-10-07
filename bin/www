@@ -4,28 +4,47 @@
  * Module dependencies.
  */
 
-var app = require('../app');
-var debug = require('debug')('proyectoclase:server');
-var http = require('http');
+const app = require('../app');
+const debug = require('debug')('proyectoclase:server');
+const http = require('http');
+const mongoose = require('mongoose');
+
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000');
+const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 /**
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+const server = http.createServer(app);
+
+// mongodb://<dbUser>?:<dbUserPassword>?@<direction>:<port>/<dbName>
+
+const uri = "mongodb://localhost:27017/video-club";
+mongoose.connect(uri);
+
+const db = mongoose.connection;
 
 /**
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port);
+db.on('error', ()=>{
+  console.log("Conexión no disponible");
+});
+
+db.on('open', ()=>{
+  server.listen(port, ()=>{
+    console.log("Conexión ok");
+  });
+});
+
+
 server.on('error', onError);
 server.on('listening', onListening);
 

@@ -9,7 +9,7 @@ router.post('/', controller.create);
 
 router.get('/', controller.list);
 
-router.get('/:id/:id2', controller.index);
+router.get('/:id', controller.index);
 
 router.patch('/:id', controller.replace);
 
