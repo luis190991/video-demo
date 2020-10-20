@@ -1,0 +1,4 @@
+{
+  "err.wrong.password": "Invalid user or password",
+  "ok.login":"Login Success"
+}

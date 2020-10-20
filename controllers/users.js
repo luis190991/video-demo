@@ -1,14 +1,18 @@
 const express = require('express');
+const async = require('async');
+const bcrypt = require('bcrypt');
+
 const User = require('../models/user');
 
 function list(req, res, next) {
-  User.find().then(obj => res.status(200).json({
+  /*User.find().then(obj => res.status(200).json({
     message:"Usuarios del sistema",
     objs:obj
   })).catch(err => res.status(500).json({
     message: "No se pueden mostrar los usuarios",
     objs: err
-  }));
+  }));*/
+  res.status(200).send({});
 }
 
 function index(req, res, next) {
@@ -23,25 +27,35 @@ function index(req, res, next) {
 }
 
 function create(req, res, next) {
+
   let email = req.body.email;
   let name = req.body.name;
   let lastName = req.body.lastName;
   let password = req.body.password;
 
-  let user = new User({
-    _email: email,
-    _name: name,
-    _lastName: lastName,
-    _password: password
-  });
+  async.parallel({
+      salt:(callback) =>{
+        bcrypt.genSalt(10, callback);
+      }
+  }, (err, result)=>{
+    bcrypt.hash(password, result.salt, (err, hash) => {
+      let user = new User({
+        _email: email,
+        _name: name,
+        _lastName: lastName,
+        _password: hash,
+        _salt: result.salt
+      });
 
-  user.save().then(obj => res.status(200).json({
-    message:'usuario creado correctamente',
-    objs: obj
-  })).catch(err => res.status(500).json({
-    message: "No se pudo almacenar el usuario",
-    objs: err
-  }));
+      user.save().then(obj => res.status(200).json({
+        message:'usuario creado correctamente',
+        objs: obj
+      })).catch(err => res.status(500).json({
+        message: "No se pudo almacenar el usuario",
+        objs: err
+      }));
+    });
+  });
 }
 
 function replace(req, res, next) {

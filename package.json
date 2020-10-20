@@ -3,16 +3,30 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
-    "dev": "supervisor ./bin/www"
+    "start": "export NODE_ENV=production; node ./bin/www",
+    "dev": "supervisor ./bin/www",
+    "test": "jest"
+  },
+  "jest":{
+    "verbose": true
   },
   "dependencies": {
+    "async": "^3.2.0",
+    "bcrypt": "^5.0.0",
+    "config": "^3.3.2",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "~4.16.1",
+    "express-jwt": "^6.0.0",
     "http-errors": "~1.6.3",
+    "i18n": "^0.13.2",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.10.8",
     "morgan": "~1.9.1",
     "pug": "2.0.0-beta11"
+  },
+  "devDependencies": {
+    "jest": "^26.6.0",
+    "supertest": "^5.0.0"
   }
 }
